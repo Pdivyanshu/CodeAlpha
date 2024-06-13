@@ -1,0 +1,79 @@
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Scanner;
+
+class  HotelReservationSystem {
+    private Map<Integer, String> rooms; // Room ID to room type mapping
+    private Map<Integer, Boolean> availability; // Room ID to availability status mapping
+    private Scanner scanner;
+
+    public HotelReservationSystem() {
+        rooms = new HashMap<>();
+        availability = new HashMap<>();
+        scanner = new Scanner(System.in);
+    }
+
+    public void addRoom(int roomId, String roomType) {
+        rooms.put(roomId, roomType);
+        availability.put(roomId, true); // Mark room as available initially
+    }
+
+    public boolean isRoomAvailable(int roomId) {
+        return availability.getOrDefault(roomId, false);
+    }
+
+    public void bookRoom(int roomId) {
+        if (isRoomAvailable(roomId)) {
+            availability.put(roomId, false); // Mark room as booked
+            System.out.println("Room " + roomId + " booked successfully.");
+        } else {
+            System.out.println("Room " + roomId + " is not available.");
+        }
+    }
+
+    public void viewBookingDetails(int roomId) {
+        if (rooms.containsKey(roomId)) {
+            System.out.println("Room " + roomId + " details:");
+            System.out.println("Type: " + rooms.get(roomId));
+            System.out.println("Availability: " + (availability.getOrDefault(roomId, false) ? "Available" : "Booked"));
+        } else {
+            System.out.println("Invalid room ID.");
+        }
+    }
+
+    public static void main(String[] args) {
+        HotelReservationSystem reservationSystem = new HotelReservationSystem();
+        reservationSystem.addRoom(101, "Standard");
+        reservationSystem.addRoom(102, "Deluxe");
+
+        Scanner scanner = new Scanner(System.in);
+
+        while (true) {
+            System.out.println("\nMenu:");
+            System.out.println("1. Book a room");
+            System.out.println("2. View booking details");
+            System.out.println("3. Exit");
+            System.out.print("Enter your choice: ");
+            int choice = scanner.nextInt();
+
+            switch (choice) {
+                case 1:
+                    System.out.print("Enter room ID to book: ");
+                    int roomIdToBook = scanner.nextInt();
+                    reservationSystem.bookRoom(roomIdToBook);
+                    break;
+                case 2:
+                    System.out.print("Enter room ID to view details: ");
+                    int roomIdToView = scanner.nextInt();
+                    reservationSystem.viewBookingDetails(roomIdToView);
+                    break;
+                case 3:
+                    System.out.println("Exiting...");
+                    scanner.close();
+                    return;
+                default:
+                    System.out.println("Invalid choice. Please try again.");
+            }
+        }
+    }
+}
